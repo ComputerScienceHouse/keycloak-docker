@@ -24,3 +24,7 @@ RUN java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/config
 java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml \
 -xsl:/opt/jboss/keycloak/changeProxy.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml && \
 rm /opt/jboss/keycloak/changeProxy.xsl
+
+# Set permissions on the Wildfly standalone directory for OpenShift deployments
+RUN chmod -R og+rwx /opt/jboss/keycloak/standalone
+
