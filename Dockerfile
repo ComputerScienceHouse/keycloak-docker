@@ -28,3 +28,5 @@ rm /opt/jboss/keycloak/changeProxy.xsl
 # Set permissions on the Wildfly standalone directory for OpenShift deployments
 RUN chmod -R og+rwx /opt/jboss/keycloak/standalone
 
+# Add Kerberos client config
+ADD krb5.conf /etc/
