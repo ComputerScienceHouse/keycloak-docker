@@ -2,6 +2,9 @@
 FROM jboss/keycloak:latest
 MAINTAINER Steven Mirabito (smirabito@csh.rit.edu)
 
+# Temporarily elevate permissions
+USER root
+
 # Copy XSL patches into container
 ADD changeDatabase.xsl changeProxy.xsl theme.xsl /opt/jboss/keycloak/
 
@@ -9,22 +12,20 @@ ADD changeDatabase.xsl changeProxy.xsl theme.xsl /opt/jboss/keycloak/
 RUN java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone.xml \
 -xsl:/opt/jboss/keycloak/changeDatabase.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone.xml && \
 java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml \
--xsl:/opt/jboss/keycloak/changeDatabase.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml && \
-rm -f /opt/jboss/keycloak/changeDatabase.xsl
+-xsl:/opt/jboss/keycloak/changeDatabase.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
 
 # Install the PostgreSQL JDBC Driver
-RUN mkdir -p /opt/jboss/keycloak/modules/system/layers/base/org/postgresql/jdbc/main && \
-cd /opt/jboss/keycloak/modules/system/layers/base/org/postgresql/jdbc/main && \
-curl -O https://jdbc.postgresql.org/download/postgresql-42.0.0.jar
-
+ADD https://jdbc.postgresql.org/download/postgresql-42.0.0.jar \
+/opt/jboss/keycloak/modules/system/layers/base/org/postgresql/jdbc/main/postgresql-42.0.0.jar
 ADD module.xml /opt/jboss/keycloak/modules/system/layers/base/org/postgresql/jdbc/main/
+RUN chown -R jboss:jboss /opt/jboss/keycloak/modules/system/layers/base/org/postgresql && \
+chmod 644 /opt/jboss/keycloak/modules/system/layers/base/org/postgresql/jdbc/main/postgresql-42.0.0.jar
 
 # Patch configuration for reverse proxy support
 RUN java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone.xml \
 -xsl:/opt/jboss/keycloak/changeProxy.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone.xml && \
 java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml \
--xsl:/opt/jboss/keycloak/changeProxy.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml && \
-rm -f /opt/jboss/keycloak/changeProxy.xsl
+-xsl:/opt/jboss/keycloak/changeProxy.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
 
 # Set permissions on the Wildfly standalone directory for OpenShift deployments
 RUN chmod -R og+rwx /opt/jboss/keycloak/standalone
@@ -33,13 +34,16 @@ RUN chmod -R og+rwx /opt/jboss/keycloak/standalone
 ADD krb5.conf /etc/
 
 # Install theme
-RUN cd /tmp && \
-curl -O https://repo.csh.rit.edu/repository/raw/csh-material-login/theme/master/theme-master-latest.zip && \
-/opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=edu.rit.csh.theme --resources=theme-master-latest.zip" && \
-rm -f theme-master-latest.zip && \
+ADD https://repo.csh.rit.edu/repository/raw/csh-material-login/theme/master/theme-master-latest.zip /opt/jboss/keycloak/csh-theme.zip
+RUN cd /opt/jboss/keycloak && \
+chown jboss:jboss csh-theme.zip && \
+chmod 644 csh-theme.zip && \
+/opt/jboss/keycloak/bin/jboss-cli.sh --command="module add --name=edu.rit.csh.theme --resources=csh-theme.zip" && \
 java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone.xml \
 -xsl:/opt/jboss/keycloak/theme.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone.xml && \
 java -jar /usr/share/java/saxon.jar -s:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml \
--xsl:/opt/jboss/keycloak/theme.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml && \
-rm -f /opt/jboss/keycloak/theme.xsl
+-xsl:/opt/jboss/keycloak/theme.xsl -o:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
+
+# Drop permissions
+USER jboss
 
