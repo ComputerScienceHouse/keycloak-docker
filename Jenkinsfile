@@ -24,11 +24,12 @@ pipeline {
                     COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
 
                     docker.withRegistry('https://registry.csh.rit.edu', 'nexus-jenkins') {
-                        if (env.BRANCH_NAME.equals('master')) {
-                            image.tag('latest')
+                        if (env.BRANCH_NAME == 'master') {
+                            image.push('latest')
+                        } else {
+                            image.push(env.BRANCH_NAME)
                         }
 
-                        image.tag(env.BRANCH_NAME)
                         image.push(COMMIT_HASH)
                     }
                 }
@@ -39,7 +40,7 @@ pipeline {
             when {
                 expression {
                     // If we're not building a PR, the build is successful, and we're on the master branch, deploy to OpenShift
-                    return !env.CHANGE_ID && (env.BRANCH_NAME.equals('master')) &&
+                    return !env.CHANGE_ID && (env.BRANCH_NAME == 'master') &&
                         (currentBuild.result == null || currentBuild.result == 'SUCCESS')
                 }
             }
