@@ -1,5 +1,4 @@
 embed-server --server-config=standalone.xml --std-out=echo
 module add --name=edu.rit.csh.sso.theme --resources=/opt/jboss/keycloak/csh-theme.zip
-run-batch --file=customization/webroot.cli
 run-batch --file=customization/theme.cli
 stop-embedded-server

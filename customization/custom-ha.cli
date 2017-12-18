@@ -1,4 +1,3 @@
 embed-server --server-config=standalone-ha.xml --std-out=echo
-run-batch --file=customization/webroot.cli
 run-batch --file=customization/theme.cli
 stop-embedded-server
