@@ -1,2 +1,1 @@
-module add --name=edu.rit.csh.sso.theme --resources=/opt/jboss/keycloak/csh-theme.zip
 /subsystem=keycloak-server/theme=defaults:list-add(name=modules, value=edu.rit.csh.sso.theme)
