@@ -7,6 +7,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    sh(returnStdout: true, script: 'docker pull jboss/keycloak:latest')
                     image = docker.build('keycloak')
                 }
             }
@@ -49,7 +50,7 @@ pipeline {
                     openshift.withCluster('csh') {
                         openshift.withProject('keycloak') {
                             openshift.doAs('os-sa-keycloak') {
-                                openshift.tag("registry.csh.rit.edu/keycloak:${COMMIT_HASH}", 'keycloak/keycloak:latest')
+                                openshift.tag("docker.csh.rit.edu/keycloak:${COMMIT_HASH}", 'keycloak/keycloak:latest')
                                 openshift.selector('dc', [app: 'keycloak']).deploy()
                             }
                         }

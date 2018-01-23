@@ -22,7 +22,12 @@ RUN cd /opt/jboss/keycloak && \
 ADD krb5.conf /etc/
 
 # Set permissions on the Wildfly standalone directory for OpenShift deployments
-RUN chmod -R og+rwx /opt/jboss/keycloak/standalone
+RUN chown -R jboss:0 $JBOSS_HOME/standalone && \
+    chmod -R g+rw $JBOSS_HOME/standalone && \
+    chown -R jboss:0 $JBOSS_HOME/modules/system/layers/base && \
+    chmod -R g+rw $JBOSS_HOME/modules/system/layers/base && \
+    chown -R jboss:0 /tmp && \
+    chmod -R g+rw /tmp
 
 # Drop permissions
 USER jboss
