@@ -1,5 +1,5 @@
 # computersciencehouse/keycloak
-FROM jboss/keycloak:4.3.0.Final
+FROM jboss/keycloak:4.8.3.Final
 MAINTAINER Steven Mirabito (smirabito@csh.rit.edu)
 
 # Temporarily elevate permissions
@@ -9,7 +9,7 @@ USER root
 ADD customization /opt/jboss/keycloak/customization
 
 # Download theme
-ADD https://repo.csh.rit.edu/repository/raw/csh-material-login/theme/master/theme-master-latest.zip /opt/jboss/keycloak/csh-theme.zip
+ADD https://s3.csh.rit.edu/csh-material-login/latest.zip /opt/jboss/keycloak/csh-theme.zip
 RUN cd /opt/jboss/keycloak && \
 chown jboss:jboss csh-theme.zip && \
 chmod 644 csh-theme.zip
@@ -20,6 +20,7 @@ RUN cd /opt/jboss/keycloak && \
 
 # Add Kerberos client config
 ADD krb5.conf /etc/
+ADD https://csh-ds01.csh.rit.edu/ipa/config/ca.crt /etc/ipa/ca.crt
 
 # Set permissions on the Wildfly standalone directory for OpenShift deployments
 RUN chown -R jboss:0 $JBOSS_HOME/standalone && \
