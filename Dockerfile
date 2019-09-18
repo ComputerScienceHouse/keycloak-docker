@@ -20,7 +20,7 @@ RUN cd /opt/jboss/keycloak && \
 
 # Add Kerberos client config
 ADD krb5.conf /etc/
-ADD https://csh-ds01.csh.rit.edu/ipa/config/ca.crt /etc/ipa/ca.crt
+ADD https://ipa01-nrh.csh.rit.edu/ipa/config/ca.crt /etc/ipa/ca.crt
 
 # Set permissions on the Wildfly standalone directory for OpenShift deployments
 RUN chown -R jboss:0 $JBOSS_HOME/standalone && \
