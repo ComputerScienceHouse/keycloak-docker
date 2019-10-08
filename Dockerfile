@@ -1,5 +1,5 @@
 # computersciencehouse/keycloak
-FROM jboss/keycloak:4.8.3.Final
+FROM jboss/keycloak:7.0.0.Final
 MAINTAINER Steven Mirabito (smirabito@csh.rit.edu)
 
 # Temporarily elevate permissions
