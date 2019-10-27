@@ -1,5 +1,5 @@
 # computersciencehouse/keycloak
-FROM jboss/keycloak:4.8.3.Final
+FROM jboss/keycloak:7.0.1
 MAINTAINER Steven Mirabito (smirabito@csh.rit.edu)
 
 # Temporarily elevate permissions
@@ -11,7 +11,7 @@ ADD customization /opt/jboss/keycloak/customization
 # Download theme
 ADD https://s3.csh.rit.edu/csh-material-login/latest.zip /opt/jboss/keycloak/csh-theme.zip
 RUN cd /opt/jboss/keycloak && \
-chown jboss:jboss csh-theme.zip && \
+chown jboss:0 csh-theme.zip && \
 chmod 644 csh-theme.zip
 
 # Execute customization script
