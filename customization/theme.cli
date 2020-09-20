@@ -1,1 +1,0 @@
-/subsystem=keycloak-server/theme=defaults:list-add(name=modules, value=edu.rit.csh.sso.theme)
