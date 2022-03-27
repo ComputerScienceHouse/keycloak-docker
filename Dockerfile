@@ -1,5 +1,5 @@
 # computersciencehouse/keycloak
-FROM jboss/keycloak:15.0.2
+FROM jboss/keycloak:16.1.1
 MAINTAINER Computer Science House (rtp@csh.rit.edu)
 
 ARG THEME_VERSION=2.0.0
