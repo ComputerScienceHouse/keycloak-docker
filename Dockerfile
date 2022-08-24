@@ -1,5 +1,5 @@
 # computersciencehouse/keycloak
-FROM quay.io/keycloak/keycloak:17.0.0
+FROM quay.io/keycloak/keycloak:18.0.0
 MAINTAINER Computer Science House (rtp@csh.rit.edu)
 
 ARG THEME_VERSION=2.0.0
@@ -19,7 +19,6 @@ ADD https://ipa10-nrh.csh.rit.edu/ipa/config/ca.crt /etc/ipa/ca.crt
 # Set permissions on the Wildfly standalone directory for OpenShift deployments
 RUN chown -R keycloak:0 /tmp && \
   chmod -R g+rw /tmp && \
-  mkdir ./data && \
   chmod -R 774 ./data && \
   chown -R keycloak:0 ./data
 
