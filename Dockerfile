@@ -2,7 +2,7 @@
 FROM quay.io/keycloak/keycloak:19.0.0
 MAINTAINER Computer Science House (rtp@csh.rit.edu)
 
-ARG THEME_VERSION=2.0.0
+ARG THEME_VERSION=2.0.1
 
 WORKDIR /opt/keycloak
 # Temporarily elevate permissions
