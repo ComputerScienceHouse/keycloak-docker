@@ -1,5 +1,5 @@
 # computersciencehouse/keycloak
-FROM quay.io/keycloak/keycloak:18.0.0
+FROM quay.io/keycloak/keycloak:19.0.0
 MAINTAINER Computer Science House (rtp@csh.rit.edu)
 
 ARG THEME_VERSION=2.0.0
