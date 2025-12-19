@@ -1,19 +1,3 @@
-## Build extension with java image keycloak is based on
-FROM docker.io/gradle:jdk11-ubi9 AS totp-build
-
-# Elevate for the build
-USER root
-
-# Install git
-RUN microdnf install -y git
-
-# Clone git repo
-RUN git clone --depth 1 --branch v1.0.0 https://github.com/medihause/keycloak-totp-api /keycloak-totp-api
-WORKDIR /keycloak-totp-api
-
-# Build
-RUN gradle --no-daemon shadowJar
-
 ## computersciencehouse/keycloak
 FROM quay.io/keycloak/keycloak:19.0.2
 MAINTAINER Computer Science House (rtp@csh.rit.edu)
@@ -27,7 +11,9 @@ USER root
 # Download theme
 ADD https://s3.csh.rit.edu/csh-material-login/csh-material-login_$THEME_VERSION.jar \
     ./providers
-COPY --from=totp-build /keycloak-totp-api/build/libs/keycloak-totp-api-1.0.0-all.jar ./providers
+# Download TOTP API provider
+ADD https://github.com/costowell/keycloak-totp-api/releases/download/1.0.1-kc19/keycloak-totp-api.jar \
+    ./providers
 
 # Add Kerberos client config
 ADD krb5.conf /etc/
