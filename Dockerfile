@@ -11,6 +11,8 @@ USER root
 # Download theme
 ADD https://s3.csh.rit.edu/csh-material-login/csh-material-login_$THEME_VERSION.jar \
     ./providers
+ADD https://github.com/medihause/keycloak-totp-api/releases/download/v1.0.1-kc26/keycloak-totp-api.jar \
+    ./providers
 
 # Add Kerberos client config
 ADD krb5.conf /etc/
